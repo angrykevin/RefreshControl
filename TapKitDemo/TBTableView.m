@@ -167,8 +167,6 @@
   self = [super init];
   if (self) {
     
-    self.backgroundColor = [UIColor redColor];
-    
     _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     _activityIndicatorView.hidesWhenStopped = NO;
     [_activityIndicatorView stopAnimating];
