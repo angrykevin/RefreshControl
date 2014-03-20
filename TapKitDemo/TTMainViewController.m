@@ -26,6 +26,29 @@
   
   _objectList = [[NSMutableArray alloc] init];
   
+  
+  UIButton *bt = [[UIButton alloc] init];
+  [bt addTarget:self action:@selector(bta:) forControlEvents:UIControlEventTouchUpInside];
+  bt.frame = CGRectMake(10.0, 100.0, 300.0, 40.0);
+  [self.view addSubview:bt];
+  [bt showBorderWithBlueColor];
+  
+  bt = [[UIButton alloc] init];
+  [bt addTarget:self action:@selector(btb:) forControlEvents:UIControlEventTouchUpInside];
+  bt.frame = CGRectMake(10.0, 150.0, 300.0, 40.0);
+  [self.view addSubview:bt];
+  [bt showBorderWithBlueColor];
+  
+}
+
+- (void)bta:(id)sender
+{
+  [_tableView startRefreshing:YES];
+}
+
+- (void)btb:(id)sender
+{
+  [_tableView stopRefreshing:YES];
 }
 
 

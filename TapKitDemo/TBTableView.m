@@ -40,12 +40,11 @@
   }
   
   if ( _infiniteRefreshControl ) {
+    
     [_infiniteRefreshControl sizeToFit];
+    _infiniteRefreshControl.frame = CGRectMake(0.0, MAX(self.contentSize.height, self.height),
+                                               _infiniteRefreshControl.width, _infiniteRefreshControl.height);
     
-    CGFloat contentHeight = self.contentSize.height;
-    CGFloat height = self.height;
-    
-    _infiniteRefreshControl.frame = CGRectMake(0.0, MAX(contentHeight, height), _infiniteRefreshControl.width, _infiniteRefreshControl.height);
   }
   
 }
@@ -86,9 +85,8 @@
     [_infiniteRefreshControl sendToBack];
     
     [_infiniteRefreshControl sizeToFit];
-    CGFloat contentHeight = self.contentSize.height;
-    CGFloat height = self.height;
-    _infiniteRefreshControl.frame = CGRectMake(0.0, MAX(contentHeight, height), _infiniteRefreshControl.width, _infiniteRefreshControl.height);
+    _infiniteRefreshControl.frame = CGRectMake(0.0, MAX(self.contentSize.height, self.height),
+                                               _infiniteRefreshControl.width, _infiniteRefreshControl.height);
     [self resetBottomEdgeInset];
   } else {
     [self removeInfiniteRefreshControl];
@@ -99,40 +97,64 @@
 
 - (void)startRefreshing:(BOOL)animated
 {
-  [_refreshControl beginRefreshing];
-  [self setContentOffset:CGPointMake(0.0, 0.0-_refreshControl.height) animated:animated];
+  if ( _refreshControl ) {
+    _launchRefreshProgrammatically = YES;
+    [_refreshControl beginRefreshing];
+    [self setContentOffset:CGPointMake(0.0, 0.0-_refreshControl.height) animated:animated];
+  }
 }
+
+- (void)stopRefreshing:(BOOL)animated
+{
+  if ( _refreshControl ) {
+    _launchRefreshProgrammatically = NO;
+    [_refreshControl endRefreshing];
+    [self setContentOffset:CGPointZero animated:animated];
+  }
+}
+
 
 - (void)startInfiniteRefreshing:(BOOL)animated
 {
-  [_infiniteRefreshControl beginRefreshing];
-  [self setContentOffset:CGPointMake(0.0, _infiniteRefreshControl.bottomY - self.height) animated:animated];
+  if ( _infiniteRefreshControl ) {
+    [_infiniteRefreshControl beginRefreshing];
+    [self setContentOffset:CGPointMake(0.0, _infiniteRefreshControl.bottomY - self.height) animated:animated];
+  }
+}
+
+- (void)stopInfiniteRefreshing:(BOOL)animated
+{
+  if ( _infiniteRefreshControl ) {
+    [_infiniteRefreshControl endRefreshing];
+  }
 }
 
 - (void)stopInfiniteRefreshingAndHide:(BOOL)animated
 {
-  CGFloat offsetY = self.contentOffset.y;
-  CGFloat contentHeight = self.contentSize.height;
-  CGFloat scrollViewHeight = self.height;
-  if ( (offsetY+scrollViewHeight) > contentHeight ) {
-    CGFloat newOffsetY = contentHeight - scrollViewHeight;
-    if ( animated ) {
-      [UIView animateWithDuration:0.25
-                       animations:^{
-                         [self setContentOffset:CGPointMake(0.0, MAX(0.0, newOffsetY)) animated:NO];
-                       }
-                       completion:^(BOOL finished) {
-                         [self removeInfiniteRefreshControl];
-                         [self resetBottomEdgeInset];
-                       }];
+  if ( _infiniteRefreshControl ) {
+    CGFloat offsetY = self.contentOffset.y;
+    CGFloat contentHeight = self.contentSize.height;
+    CGFloat scrollViewHeight = self.height;
+    if ( (offsetY+scrollViewHeight) > contentHeight ) {
+      CGFloat newOffsetY = contentHeight - scrollViewHeight;
+      if ( animated ) {
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                           [self setContentOffset:CGPointMake(0.0, MAX(0.0, newOffsetY)) animated:NO];
+                         }
+                         completion:^(BOOL finished) {
+                           [self removeInfiniteRefreshControl];
+                           [self resetBottomEdgeInset];
+                         }];
+      } else {
+        [self setContentOffset:CGPointMake(0.0, MAX(0.0, newOffsetY)) animated:NO];
+        [self removeInfiniteRefreshControl];
+        [self resetBottomEdgeInset];
+      }
     } else {
-      [self setContentOffset:CGPointMake(0.0, MAX(0.0, newOffsetY)) animated:NO];
       [self removeInfiniteRefreshControl];
       [self resetBottomEdgeInset];
     }
-  } else {
-    [self removeInfiniteRefreshControl];
-    [self resetBottomEdgeInset];
   }
 }
 
