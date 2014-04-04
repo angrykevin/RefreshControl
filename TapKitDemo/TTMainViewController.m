@@ -20,7 +20,7 @@
   _tableView.delegate = self;
   _tableView.showsRefreshControl = YES;
   [_tableView.refreshControl addTarget:self action:@selector(launchRefresh:) forControlEvents:UIControlEventValueChanged];
-  _tableView.showsInfiniteRefreshControl = YES;
+  _tableView.showsInfiniteRefreshControl = NO;
   [_tableView.infiniteRefreshControl addTarget:self action:@selector(launchInfiniteRefresh:) forControlEvents:UIControlEventValueChanged];
   [self.view addSubview:_tableView];
   
@@ -99,7 +99,7 @@
   //[_tableView reloadData];
   [_tableView.refreshControl endRefreshing];
   
-  if ( !(_tableView.showsInfiniteRefreshControl) ) {
+  if ( !(_tableView.showsInfiniteRefreshControl) && (_tableView.contentSize.height>_tableView.height) ) {
     _tableView.showsInfiniteRefreshControl = YES;
     [_tableView.infiniteRefreshControl addTarget:self action:@selector(launchInfiniteRefresh:) forControlEvents:UIControlEventValueChanged];
   }

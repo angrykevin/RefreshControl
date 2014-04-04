@@ -1,6 +1,6 @@
 //
 //  TBTableView.m
-//  TapKitDemo
+//  Teemo
 //
 //  Created by Wu Kevin on 3/19/14.
 //  Copyright (c) 2014 Telligenty. All rights reserved.
@@ -13,7 +13,7 @@
 - (id)init
 {
   self = [super initWithFrame:CGRectZero style:UITableViewStylePlain];
-  if (self) {
+  if ( self ) {
   }
   return self;
 }
@@ -29,7 +29,7 @@
     CGFloat offsetY = self.contentOffset.y;
     
     // At top
-    _refreshControl.frame = CGRectMake(0.0, MIN( offsetY, maxY ), self.width, _refreshControl.height);
+    _refreshControl.frame = CGRectMake(0.0, MIN(offsetY, maxY), self.width, _refreshControl.height);
     
     // At middle
 //    if ( offsetY<maxY ) {
@@ -54,7 +54,7 @@
 {
   _showsRefreshControl = showsRefreshControl;
   if ( _showsRefreshControl ) {
-    if ( _refreshControl==nil ) {
+    if ( !_refreshControl ) {
       _refreshControl = [[UIRefreshControl alloc] init];
     }
     if ( _refreshControl.superview!=self ) {
@@ -75,7 +75,7 @@
 {
   _showsInfiniteRefreshControl = showsInfiniteRefreshControl;
   if ( _showsInfiniteRefreshControl ) {
-    if ( _infiniteRefreshControl==nil ) {
+    if ( !_infiniteRefreshControl ) {
       _infiniteRefreshControl = [[TBRefreshControl alloc] init];
     }
     if ( _infiniteRefreshControl.superview!=self ) {
@@ -118,7 +118,7 @@
 {
   if ( _infiniteRefreshControl ) {
     [_infiniteRefreshControl beginRefreshing];
-    [self setContentOffset:CGPointMake(0.0, _infiniteRefreshControl.bottomY - self.height) animated:animated];
+    [self setContentOffset:CGPointMake(0.0, _infiniteRefreshControl.bottomY-self.height) animated:animated];
   }
 }
 
@@ -135,7 +135,7 @@
     CGFloat offsetY = self.contentOffset.y;
     CGFloat contentHeight = self.contentSize.height;
     CGFloat scrollViewHeight = self.height;
-    if ( (offsetY+scrollViewHeight) > contentHeight ) {
+    if ( (offsetY+scrollViewHeight)>contentHeight ) {
       CGFloat newOffsetY = contentHeight - scrollViewHeight;
       if ( animated ) {
         [UIView animateWithDuration:0.25
@@ -182,12 +182,14 @@
 @end
 
 
+
+
 @implementation TBRefreshControl
 
 - (id)init
 {
   self = [super init];
-  if (self) {
+  if ( self ) {
     
     _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     _activityIndicatorView.hidesWhenStopped = NO;
@@ -243,7 +245,7 @@
       CGFloat topY = self.topY;
       
       if ( scrollView.isDragging ) {
-        if ( ((offsetY+scrollView.height)-topY) >= (0.6*self.height) ) {
+        if ( ((offsetY+scrollView.height)-topY)>=(0.6*self.height) ) {
 #ifdef DEBUG
           if ( !_triggered ) NSLog(@"triggered");
 #endif
@@ -309,7 +311,7 @@
   CGFloat offsetY = scrollView.contentOffset.y;
   CGFloat contentHeight = scrollView.contentSize.height;
   CGFloat scrollViewHeight = scrollView.height;
-  if ( (offsetY+scrollViewHeight) > contentHeight ) {
+  if ( (offsetY+scrollViewHeight)>contentHeight ) {
     CGFloat newOffsetY = contentHeight - scrollViewHeight;
     [scrollView setContentOffset:CGPointMake(0.0, MAX(0.0, newOffsetY)) animated:YES];
   }
