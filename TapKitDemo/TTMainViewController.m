@@ -26,35 +26,40 @@
   
   _objectList = [[NSMutableArray alloc] init];
   
-  
-  UIButton *bt = [[UIButton alloc] init];
-  [bt addTarget:self action:@selector(bta:) forControlEvents:UIControlEventTouchUpInside];
-  bt.frame = CGRectMake(10.0, 100.0, 300.0, 40.0);
-  [self.view addSubview:bt];
-  [bt showBorderWithBlueColor];
-  
-  bt = [[UIButton alloc] init];
-  [bt addTarget:self action:@selector(btb:) forControlEvents:UIControlEventTouchUpInside];
-  bt.frame = CGRectMake(10.0, 150.0, 300.0, 40.0);
-  [self.view addSubview:bt];
-  [bt showBorderWithBlueColor];
-  
 }
-
-- (void)bta:(id)sender
-{
-  [_tableView startRefreshing:YES];
-}
-
-- (void)btb:(id)sender
-{
-  [_tableView stopRefreshing:YES];
-}
-
 
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
+  
+  UIButton *bt = [[UIButton alloc] init];
+  [bt addTarget:self action:@selector(beginDown:) forControlEvents:UIControlEventTouchUpInside];
+  [bt setTitle:@"开始下拉刷新" forState:UIControlStateNormal];
+  bt.frame = CGRectMake(10.0, 30.0, 300.0, 40.0);
+  [self.view addSubview:bt];
+  [bt showBorderWithGreenColor];
+  
+  bt = [[UIButton alloc] init];
+  [bt addTarget:self action:@selector(endDown:) forControlEvents:UIControlEventTouchUpInside];
+  [bt setTitle:@"停止下拉刷新" forState:UIControlStateNormal];
+  bt.frame = CGRectMake(10.0, 80.0, 300.0, 40.0);
+  [self.view addSubview:bt];
+  [bt showBorderWithRedColor];
+  
+  bt = [[UIButton alloc] init];
+  [bt addTarget:self action:@selector(endUp:) forControlEvents:UIControlEventTouchUpInside];
+  [bt setTitle:@"开始上拉刷新" forState:UIControlStateNormal];
+  bt.frame = CGRectMake(10.0, self.view.height-100.0, 300.0, 40.0);
+  [self.view addSubview:bt];
+  [bt showBorderWithGreenColor];
+  
+  bt = [[UIButton alloc] init];
+  [bt addTarget:self action:@selector(endUp:) forControlEvents:UIControlEventTouchUpInside];
+  [bt setTitle:@"开始上拉刷新" forState:UIControlStateNormal];
+  bt.frame = CGRectMake(10.0, self.view.height-50.0, 300.0, 40.0);
+  [self.view addSubview:bt];
+  [bt showBorderWithRedColor];
+  
   
   NSString *time = [self loadTime];
   if ( time ) {
@@ -68,6 +73,29 @@
   [super viewWillLayoutSubviews];
   _tableView.frame = self.view.bounds;
 }
+
+
+
+- (void)beginDown:(id)sender
+{
+  [_tableView startRefreshing:YES];
+}
+
+- (void)endDown:(id)sender
+{
+  [_tableView stopRefreshing:YES];
+}
+
+- (void)beginUp:(id)sender
+{
+  [_tableView startInfiniteRefreshing:YES];
+}
+
+- (void)endUp:(id)sender
+{
+  [_tableView stopInfiniteRefreshing:YES];
+}
+
 
 
 - (void)launchRefresh:(id)sender
@@ -133,6 +161,9 @@
     [_tableView stopInfiniteRefreshingAndHide:YES];
   }
 }
+
+
+
 
 - (void)saveTime:(NSDate *)time
 {
